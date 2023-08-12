@@ -47,3 +47,4 @@ group :development do
 end
 
 gem 'dotenv-rails'
+gem "pg", "~> 1.1"
