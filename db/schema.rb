@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_12_124501) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_20_064532) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
@@ -21,6 +21,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_12_124501) do
     t.geometry "point", limit: {:srid=>0, :type=>"geometry"}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "thumbnail", null: false
+    t.string "preview_url"
+    t.string "track_name", null: false
+    t.string "artist_name", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "uid"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
 end
