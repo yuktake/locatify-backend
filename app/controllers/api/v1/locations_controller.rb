@@ -5,7 +5,11 @@ class Api::V1::LocationsController < ApplicationController
         lat = params[:lat].to_f
         lng = params[:lng].to_f
         radius = params[:radius].to_i * 1000
-        locations = Location.where("ST_DWithin(point, 'SRID=4326;POINT(#{lat} #{lng})'::GEOGRAPHY, #{radius})")
+        locations = Location
+            .select("id, uid, mid, point, thumbnail, preview_url, track_name, artist_name, ST_DWithin(point, 'SRID=4326;POINT(#{lat} #{lng})'::GEOGRAPHY, #{radius}) as distance, created_at, updated_at")
+            .where("ST_DWithin(point, 'SRID=4326;POINT(#{lat} #{lng})'::GEOGRAPHY, #{radius})")
+            .order('distance')
+            .limit(20)
 
         render json: { 
             status: 200, 
