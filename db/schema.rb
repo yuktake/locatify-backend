@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_20_064532) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_22_055721) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
@@ -25,6 +25,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_20_064532) do
     t.string "preview_url"
     t.string "track_name", null: false
     t.string "artist_name", null: false
+    t.index ["uid"], name: "index_locations_on_uid", unique: true
   end
 
   create_table "users", force: :cascade do |t|
