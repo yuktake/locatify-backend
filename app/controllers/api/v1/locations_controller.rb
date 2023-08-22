@@ -30,8 +30,8 @@ class Api::V1::LocationsController < ApplicationController
     end
 
     def show
-        location = Location.find(params[:id])
-        if Location.exists?(id: params[:id]) then
+        location = Location.where(uid: params[:id])[0]
+        if Location.exists?(uid: params[:id]) then
             render json: { status: 200, location: JSON.parse(location.to_json).merge({
                 x: location.point.x,
                 y: location.point.y,
