@@ -15,7 +15,7 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: <%= ENV["MYAPP_DATABASE_USERNAME"] %>
   password: <%= ENV["MYAPP_DATABASE_PASSWORD"] %>
-  host: db
+  host: <%= ENV["HOST_DB"] %>
 
 development:
   <<: *default
@@ -50,6 +50,6 @@ test:
 #
 production:
   <<: *default
-  database: myapp_production
-  username: myapp
+  database: locatify_production
+  username: <%= ENV["MYAPP_DATABASE_USERNAME"] %>
   password: <%= ENV["MYAPP_DATABASE_PASSWORD"] %>
