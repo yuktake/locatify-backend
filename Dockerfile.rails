@@ -1,0 +1,28 @@
+FROM --platform=linux/x86_64 ruby:3.0
+
+ENV RAILS_ENV=production
+
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs sudo vim
+
+ENV APP_PATH /myapp
+
+RUN mkdir $APP_PATH
+WORKDIR $APP_PATH
+RUN mkdir -p tmp/pids
+RUN mkdir -p tmp/sockets
+
+COPY Gemfile $APP_PATH/Gemfile
+COPY Gemfile.lock $APP_PATH/Gemfile.lock
+RUN bundle install
+
+COPY . $APP_PATH
+
+COPY entrypoint_ecs.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint_ecs.sh
+ENTRYPOINT ["entrypoint_ecs.sh"]
+
+# 以下の記述があることでnginxから見ることができる
+VOLUME $APP_PATH/public
+VOLUME $APP_PATH/tmp
+
+CMD bash -c "rm -f tmp/pids/server.pid && bundle exec puma -C config/puma.rb"
