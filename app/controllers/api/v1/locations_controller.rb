@@ -1,7 +1,7 @@
 class Api::V1::LocationsController < ApplicationController
 
     def index
-        logger.error 'debugggggggg'
+        logger.error 'debuggggggg'
         # mに変換
         lat = params[:lat].to_f
         lng = params[:lng].to_f
