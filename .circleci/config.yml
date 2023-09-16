@@ -3,11 +3,12 @@ version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@6.15
   aws-ecs: circleci/aws-ecs@2.0.0
-  
+
 workflows:
   # Nginxのデプロイ
   nginx-deploy:
     jobs:
+      resource_class: medium+
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
           region: AWS_REGION
