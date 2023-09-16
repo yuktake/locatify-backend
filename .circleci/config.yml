@@ -1,0 +1,54 @@
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@6.15
+  aws-ecs: circleci/aws-ecs@2.0.0
+workflows:
+  # Nginxのデプロイ
+  nginx-deploy:
+    jobs:
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_ACCOUNT_URL
+          region: AWS_REGION
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          create-repo: true
+          dockerfile: ./Dockerfile.nginx
+          repo: nginx-sample
+          tag: "${CIRCLE_SHA1}"
+          filters:
+            branches:
+              only: master
+      - aws-ecs/deploy-service-update:
+          requires:
+            - aws-ecr/build-and-push-image
+          family: 'sample-ecs'
+          cluster-name: 'locatify-cluster'
+          service-name: 'sample-ecs'
+          # containerはタスク定義で設定したコンテナ名にする
+          container-image-name-updates: "container=nginx,tag=${CIRCLE_SHA1}"
+
+  # Railsのデプロイ
+  rails-deploy:
+    jobs:
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_ACCOUNT_URL
+          region: AWS_REGION
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          create-repo: true
+          dockerfile: ./Dockerfile.rails
+          # ECRのリポジトリ
+          repo: rails-sample
+          tag: "${CIRCLE_SHA1}"
+          filters:
+            branches:
+              only: master
+      - aws-ecs/deploy-service-update:
+          requires:
+            - aws-ecr/build-and-push-image
+          family: 'sample-ecs'
+          cluster-name: 'locatify-cluster'
+          service-name: 'sample-ecs'
+          # containerはタスク定義で設定したコンテナ名にする
+          container-image-name-updates: "container=rails,tag=${CIRCLE_SHA1}"
