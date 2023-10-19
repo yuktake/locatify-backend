@@ -1,11 +1,6 @@
 class Api::V1::LocationsController < ApplicationController
 
     def index
-        logger.error 'debuggggggg'
-        logger.debug ENV["HOST_DB"]
-        logger.debug ENV["MYAPP_DATABASE_USERNAME"]
-        logger.debug ENV["MYAPP_DATABASE_PASSWORD"]
-        logger.debug ENV["MYAPP_DATABASE_NAME"]
         # mに変換
         lat = params[:lat].to_f
         lng = params[:lng].to_f
